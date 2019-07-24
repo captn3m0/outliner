@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dockerfile
 
+## 0.1.1 - 2019-07-24
+
+- Adds httparty dependency
+
 ## 0.1.0 - 2019-07-24
 
 ### Added
