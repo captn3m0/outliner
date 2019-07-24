@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "outliner"
+
+def validate
+  unless (ARGV.size == 2) and Dir.exists?(ARGV[0]) and ARGV[1].match(/\w+/) and ENV.key?('OUTLINE_BASE_URI')
+    puts "[E] Please call as import local_directory remote_collection_name"
+    puts "[E] Please export OUTLINE_BASE_URI and OUTLINE_TOKEN environment variables"
+    puts "[E] OUTLINE_BASE_URI should not include /api"
+  end
+end
+
+def find_or_create_collection(name)
+  collections = CLIENT.collections_list(limit: 100)['data']
+  collections.filter!{|c|c['name'] == name}
+  if collections.size >= 1
+    collections[0]['id']
+  else
+    CLIENT.collections_create(name: name, description: 'Imported Collection')['data']['id']
+  end
+end
+
+def create_documents_recursively(directory, collection_id, parent_document_id=nil)
+  cwd = Dir.pwd
+  Dir.chdir directory
+  # Create all documents for this directory
+  Dir["*.md"].each do |file|
+    params = {
+      title: file[0...-3],
+      text: file[0...-3] + "\n" + File.read(file) + "\n\n---\nImported at #{Time.now}",
+      collectionId: collection_id,
+      publish: true
+    }
+
+    params[:parentDocumentId] = parent_document_id if parent_document_id
+    CLIENT.documents_create(params)
+    puts "[-] #{file}"
+  end
+
+  # Create child documents for each sub-directory
+  Dir.glob('*').select {|f| File.directory? f}.each do |dir|
+    puts "[-] #{dir}"
+    params = {
+      title: dir,
+      text: dir +"\nImported at #{Time.now}",
+      collectionId: collection_id,
+      publish: true,
+      parentDocumentId: parent_document_id
+    }
+    response = CLIENT.documents_create(params)
+    create_documents_recursively(dir, collection_id, response['data']['id'])
+  end
+  Dir.chdir cwd
+end
+
+# Run validations
+validate
+
+# Setup variables
+local_directory = ARGV[0]
+remote_collection_name = ARGV[1]
+
+# Create a root collection
+CLIENT = Outliner::Client.new ENV['OUTLINE_BASE_URI']
+root_collection_id = find_or_create_collection(remote_collection_name)
+
+begin
+  create_documents_recursively(local_directory, root_collection_id)
+  puts "[S] Import successful"
+rescue Exception => e
+  # If we fail, print an error, and delete the collection
+  puts "[E] Import failed with error: #{e.message}"
+  CLIENT.collections_delete(id: root_collection_id)
+  puts "[E] Deleted collection, please report the issue or retry"
+  exit 1
+end
+

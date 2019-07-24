@@ -30,6 +30,24 @@ pp client.auth_info
 pp client.collections_list(offset: 0, limit: 10)
 ```
 
+### Import
+
+`outliner` can be used to import an existing collection of documents into Outline. To do this run:
+
+```bash
+export OUTLINE_BASE_URI="https://kb.example.com"
+export OUTLINE_TOKEN="PUT YOUR TOKEN HERE"
+export SOURCE_DIRECTORY="/home/user/wiki"
+export DESTINATION_COLLECTION_NAME="Archive"
+bundle install outliner
+bundle exec bin/import "$SOURCE_DIRECTORY" "$DESTINATION_COLLECTION_NAME"
+```
+
+#### Limitations
+
+- Images are currently not imported
+- Only `.md` files are currently supported
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
