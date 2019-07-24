@@ -1,6 +1,6 @@
-# Outliner
+# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner)
 
-A simple HTTParty based wrapper for the [Outline API](https://www.getoutline.com/developers).
+A simple HTTParty based wrapper for the [Outline API](https://www.getoutline.com/developers). It also offers a one-line import option to let you migrate an existing set of Markdown files to Outline.
 
 ## Installation
 
