@@ -4,20 +4,11 @@ require "bundler/setup"
 require "outliner"
 
 def validate
-  unless (ARGV.size == 2) and Dir.exists?(ARGV[0]) and ARGV[1].match(/\w+/) and ENV.key?('OUTLINE_BASE_URI')
-    puts "[E] Please call as import local_directory remote_collection_name"
+  unless (ARGV.size == 2) and Dir.exists?(ARGV[0]) and ARGV[1].match(/\w+/) and ENV.key?('OUTLINE_BASE_URI') and ENV.key?('OUTLINE_TOKEN')
+    puts "[E] Please call as `outliner-import local_directory remote_collection_name`"
     puts "[E] Please export OUTLINE_BASE_URI and OUTLINE_TOKEN environment variables"
     puts "[E] OUTLINE_BASE_URI should not include /api"
-  end
-end
-
-def find_or_create_collection(name)
-  collections = CLIENT.collections_list(limit: 100)['data']
-  collections.filter!{|c|c['name'] == name}
-  if collections.size >= 1
-    collections[0]['id']
-  else
-    CLIENT.collections_create(name: name, description: 'Imported Collection')['data']['id']
+    exit 1
   end
 end
 
@@ -63,7 +54,7 @@ remote_collection_name = ARGV[1]
 
 # Create a root collection
 CLIENT = Outliner::Client.new ENV['OUTLINE_BASE_URI']
-root_collection_id = find_or_create_collection(remote_collection_name)
+root_collection_id = find_or_create_collection(CLIENT, remote_collection_name)
 
 begin
   create_documents_recursively(local_directory, root_collection_id)
