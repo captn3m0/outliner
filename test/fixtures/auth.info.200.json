@@ -1,0 +1,26 @@
+{
+  "data": {
+    "user": {
+      "id": "d7a6a7c0-9dda-4e01-8dc2-9b1905c08c40",
+      "createdAt": "2014-01-01T12:37:07.826Z",
+      "name": "Test User",
+      "isAdmin": true,
+      "isSuspended": false,
+      "avatarUrl": "https://example.com/avatar-url.jpg",
+      "email": "testuser@example.com"
+    },
+    "team": {
+      "id": "e0809f93-c199-4472-8a70-77eee3d67986",
+      "name": "Test Team",
+      "avatarUrl": "https://example.com/favicon-url.jpg",
+      "slackConnected": false,
+      "googleConnected": true,
+      "sharing": false,
+      "documentEmbeds": true,
+      "subdomain": "kb",
+      "url": "https://kb.example.com"
+    }
+  },
+  "status": 200,
+  "ok": true
+}
