@@ -10,10 +10,20 @@ module Outliner
       @token = ENV['OUTLINE_TOKEN']
     end
 
+    def find_or_create_collection(name)
+      collections = self.collections_list(limit: 100)['data']
+      collections.filter!{|c|c['name'] == name}
+      if collections.size >= 1
+        collections[0]['id']
+      else
+        self.collections_create(name: name, description: 'Imported Collection')['data']['id']
+      end
+    end
+
     def method_missing(method_name, params = {})
       method_name = '/' + method_name.to_s.sub('_', '.')
       body = {token: @token}.merge(params).to_json
-      options = { 
+      options = {
         body: body,
         headers: {
           'Accept'=>'application/json',

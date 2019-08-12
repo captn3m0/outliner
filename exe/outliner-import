@@ -54,7 +54,7 @@ remote_collection_name = ARGV[1]
 
 # Create a root collection
 CLIENT = Outliner::Client.new ENV['OUTLINE_BASE_URI']
-root_collection_id = find_or_create_collection(CLIENT, remote_collection_name)
+root_collection_id = CLIENT.find_or_create_collection(remote_collection_name)
 
 begin
   create_documents_recursively(local_directory, root_collection_id)
