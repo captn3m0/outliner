@@ -1,4 +1,4 @@
-# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner)
+# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner) [![](https://images.microbadger.com/badges/version/captn3m0/outliner:v0.2.0.svg)](https://microbadger.com/images/captn3m0/outliner:v0.2.0 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/captn3m0/outliner:latest.svg)](https://microbadger.com/images/captn3m0/outliner:latest 'Get your own version badge on microbadger.com')
 
 A simple HTTParty based wrapper for the [Outline API](https://www.getoutline.com/developers). It also offers a one-line import option to let you migrate an existing set of Markdown files to Outline. For quickly running export/import commands, you can use the Docker Image as well.
 
