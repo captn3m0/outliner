@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Dockerfile
+## 0.2.0 - 2019-08-12
+
+- Adds export command (See [#1013](https://github.com/outline/outline/pull/1013) for corresponding Outline PR)
+- Adds support for running import|export via Docker
+- Sets up `outline-export` and `outline-import` as rubygem executables
 
 ## 0.1.1 - 2019-07-24
 
@@ -18,5 +22,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial release
-
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.1.0...HEAD

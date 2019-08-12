@@ -1,6 +1,6 @@
-# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner)
+# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner) [![](https://images.microbadger.com/badges/version/captn3m0/outliner:v0.2.0.svg)](https://microbadger.com/images/captn3m0/outliner:v0.2.0 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/captn3m0/outliner:latest.svg)](https://microbadger.com/images/captn3m0/outliner:latest 'Get your own version badge on microbadger.com')
 
-A simple HTTParty based wrapper for the [Outline API](https://www.getoutline.com/developers). It also offers a one-line import option to let you migrate an existing set of Markdown files to Outline.
+A simple HTTParty based wrapper for the [Outline API](https://www.getoutline.com/developers). It also offers a one-line import option to let you migrate an existing set of Markdown files to Outline. For quickly running export/import commands, you can use the Docker Image as well.
 
 ## Installation
 
@@ -32,7 +32,7 @@ pp client.collections_list(offset: 0, limit: 10)
 
 ### Import
 
-`outliner` can be used to import an existing collection of documents into Outline. To do this run:
+`outliner` can be used to import an existing collection of documents into Outline. To do this, run:
 
 ```bash
 export OUTLINE_BASE_URI="https://kb.example.com"
@@ -40,12 +40,50 @@ export OUTLINE_TOKEN="PUT YOUR TOKEN HERE"
 export SOURCE_DIRECTORY="/home/user/wiki"
 export DESTINATION_COLLECTION_NAME="Archive"
 bundle install outliner
-bundle exec bin/import "$SOURCE_DIRECTORY" "$DESTINATION_COLLECTION_NAME"
+outliner-import "$SOURCE_DIRECTORY" "$DESTINATION_COLLECTION_NAME"
+```
+
+### Export
+
+`outliner` can be used to run a one-time export of all documents in Outline to a local directory. To do this, run:
+
+```bash
+export OUTLINE_BASE_URI="https://kb.example.com"
+export OUTLINE_TOKEN="PUT YOUR TOKEN HERE"
+# Ensure that this exists and is writable
+export DESTINATION_DIRECTORY="/data"
+bundle install outliner
+outliner-export "$DESTINATION_DIRECTORY"
+```
+
+## Docker
+
+You can use the pre-built docker image to run the above commands as well. See the following commands for examples:
+
+### Export
+
+```bash
+docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
+           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
+           --volume /tmp:/data \
+           captn3m0/outliner \
+           export \
+           /data
+```
+
+### Import
+
+```bash
+docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
+           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
+           --volume /path/to/wiki:/data \
+           captn3m0/outliner \
+           import "/data" "Archive"
 ```
 
 #### Limitations
 
-- Images are currently not imported
+- Images are currently not imported. Host them externally for this to work.
 - Only `.md` files are currently supported
 
 ## Development

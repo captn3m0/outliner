@@ -1,0 +1,10 @@
+Dockerfile
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+Rakefile
+test/
+vendor/
+vendor
+test
+*.gem
+.git
