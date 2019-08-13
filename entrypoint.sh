@@ -6,13 +6,13 @@ if [ $# -eq 0 ]; then
 fi
 
 setup_git() {
-  chmod 0400 /root/.ssh/id_rsa
+  chmod 0400 "$HOME/.ssh/id_rsa"
 
-  if [ -f "$HOME.ssh/id_rsa" ]; then
+  if [ -f "$HOME/.ssh/id_rsa" ]; then
     chmod 600 "$HOME.ssh/id_rsa"
 
-    if [ ! -d "$HOME.ssh/id_rsa.pub" ]; then
-      ssh-keygen -y -f "$HOME.ssh/id_rsa" > "$HOME.ssh/id_rsa.pub"
+    if [ ! -d "$HOME/.ssh/id_rsa.pub" ]; then
+      ssh-keygen -y -f "$HOME/.ssh/id_rsa" > "$HOME/.ssh/id_rsa.pub"
     fi
 
     echo "[+] Using SSH key for git pushes"

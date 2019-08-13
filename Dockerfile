@@ -5,7 +5,7 @@ COPY . /outliner/
 
 RUN gem install bundler && \
     bundle install && \
-    apk add --no-cache git && \
+    apk add --no-cache git openssh-client && \
     echo -e "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
     mkdir /root/.ssh
 
