@@ -81,10 +81,27 @@ docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
            import "/data" "Archive"
 ```
 
+### Push
+
+Note: Push is currently only available as a Docker Command
+
+```bash
+docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
+           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
+           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
+           --env GIT_BRANCH=outline \
+           --env GIT_REMOTE_URL=git@example.com:org/outline.backup.git
+           --volume /etc/ssh/private.key:/root/.ssh/id_rsa
+           captn3m0/outliner \
+           push
+```
+
 #### Limitations
 
 - Images are currently not imported. Host them externally for this to work.
 - Only `.md` files are currently supported
+- `push` doesn't sync file-history, but is meant to push a one-time backup to Git.
+- `StrictHostKeyChecking` is currently disabled for `push`, please only run this in trusted networks.
 
 ## Development
 

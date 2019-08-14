@@ -1,16 +1,15 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
-require "bundler/setup"
-require "outliner"
+require 'bundler/setup'
+require 'outliner'
 require 'tempfile'
 
 def validate
-  unless (ARGV.size == 1) and Dir.exists?(ARGV[0]) and ENV.key?('OUTLINE_BASE_URI') and ENV.key?('OUTLINE_TOKEN')
-    puts "[E] Please call as `outliner-export directory`"
-    puts "[E] Please export OUTLINE_BASE_URI and OUTLINE_TOKEN environment variables"
-    puts "[E] OUTLINE_BASE_URI should not include /api"
-    exit 1
-  end
+  raise 'Missing arguments' if ARGV.size != 1
+  raise 'Invalid directory' unless Dir.exist?(ARGV[0])
+  raise 'OUTLINE_BASE_URI not set' unless ENV.key?('OUTLINE_BASE_URI')
+  raise 'OUTLINE_TOKEN not set' unless ENV.key?('OUTLINE_TOKEN')
 end
 
 # Run validations
@@ -25,7 +24,7 @@ response = CLIENT.collections_exportAll(download: true)
 
 # Extract it to a tempfle
 file = Tempfile.new('download.zip')
-File.open(file.path, 'w') { |file| file.write(response.body) }
+File.open(file.path, 'w') { |f| f.write(response.body) }
 
 `unzip -o "#{file.path}" -d "#{local_directory}"`
 
