@@ -1,13 +1,14 @@
 #!/bin/sh
 set -eu
-
 if [ $# -eq 0 ]; then
-  echo "Please run with outliner [export|import] arguments"
+  echo "Please run with outliner [export|import|sync] arguments"
   exit
 fi
 
 setup_git() {
   if [ -f "$HOME/.ssh/id_rsa" ]; then
+    # This is required because Kubernetes secret mounts can't
+    # have file permissions set
     chmod 0400 "$HOME/.ssh/id_rsa"
 
     if [ ! -d "$HOME/.ssh/id_rsa.pub" ]; then
@@ -51,10 +52,11 @@ case $1 in
       git init
       update_git_config
       git add .
-      git commit --message "Backup: $(date)"
+      git commit --message "Backup: $(date)" > /dev/null
       BRANCH=${GIT_BRANCH:-master}
       git checkout -b "$BRANCH"
-      git push origin --force "$BRANCH"
+      git status
+      git push origin --force "HEAD:$BRANCH"
     fi
     ;;
   *)
