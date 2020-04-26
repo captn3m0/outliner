@@ -1,4 +1,4 @@
-# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner) [![](https://images.microbadger.com/badges/version/captn3m0/outliner:v0.2.0.svg)](https://microbadger.com/images/captn3m0/outliner:v0.2.0 'Get your own version badge on microbadger.com') [![](https://images.microbadger.com/badges/version/captn3m0/outliner:latest.svg)](https://microbadger.com/images/captn3m0/outliner:latest 'Get your own version badge on microbadger.com')
+# Outliner [![Gem Version](https://badge.fury.io/rb/outliner.svg)](https://badge.fury.io/rb/outliner) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/captn3m0/outliner)](https://hub.docker.com/r/captn3m0/outliner) [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/captn3m0/outliner)](https://hub.docker.com/r/captn3m0/outliner) [![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/captn3m0/outliner)](https://hub.docker.com/r/captn3m0/outliner)
 
 A simple HTTParty based wrapper for the [Outline API](https://www.getoutline.com/developers). It also offers a one-line import option to let you migrate an existing set of Markdown files to Outline. For quickly running export/import commands, you can use the Docker Image as well.
 
@@ -60,11 +60,16 @@ outliner-export "$DESTINATION_DIRECTORY"
 
 You can use the pre-built docker image to run the above commands as well. See the following commands for examples:
 
+### Setup
+
+Copy the `env.sample` file to `.env` and update the values there.
+
 ### Export
 
+Downloads all collections from Outline, and exports them as nested markdown files inside the given directory (`/data` inside the container, mount it accordingly.)
+
 ```bash
-docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
-           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
+docker run --env-file .env
            --volume /tmp:/data \
            captn3m0/outliner \
            export \
@@ -73,35 +78,33 @@ docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
 
 ### Import
 
+Imports all markdown documents in a directory to a named Collection on outline. Creates the collection if it doesn't exist.
+
 ```bash
-docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
-           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
+docker run --env-file .env
            --volume /path/to/wiki:/data \
            captn3m0/outliner \
-           import "/data" "Archive"
+           import /data "Archive"
 ```
 
-### Push
+### Sync
 
-Note: Push is currently only available as a Docker Command
+Does a export from Outline, and pushes the corresponding result to the Git repository. Currenly does a force-push to the repository. Use with care.
+
+Note: Sync is currently only available as a Docker Command
 
 ```bash
-docker run --env OUTLINE_BASE_URI="https://kb.example.com" \
-           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
-           --env OUTLINE_TOKEN="PUT YOUR TOKEN HERE" \
-           --env GIT_BRANCH=outline \
-           --env GIT_REMOTE_URL=git@example.com:org/outline.backup.git
+docker run --env-file .env
            --volume /etc/ssh/private.key:/root/.ssh/id_rsa
            captn3m0/outliner \
-           push
+           sync
 ```
 
 #### Limitations
 
-- Images are currently not imported. Host them externally for this to work.
-- Only `.md` files are currently supported
-- `push` doesn't sync file-history, but is meant to push a one-time backup to Git.
-- `StrictHostKeyChecking` is currently disabled for `push`, please only run this in trusted networks.
+- [import] Images are currently not imported. Host them externally for this to work.
+- [import] Only `.md` files are currently supported
+- [docker] `StrictHostKeyChecking` is currently disabled for `push`, please only run this in trusted networks.
 
 ## Development
 
