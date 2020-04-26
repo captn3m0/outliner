@@ -9,3 +9,4 @@
 /vendor/
 Gemfile.lock
 *.gem
+.env

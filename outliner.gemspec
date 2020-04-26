@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "outliner"
   spec.version       = Outliner::VERSION
   spec.authors       = ["Nemo"]
-  spec.email         = ["rubygem.outliner@captnemo.in"]
+  spec.email         = ["outliner@captnemo.in"]
   spec.licenses      = ["MIT"]
 
   spec.summary       = "A simple HTTParty based client for outline knowledge base."
