@@ -41,22 +41,36 @@ case $1 in
     bundle exec outliner-import "$@"
     ;;
   sync)
-    tmp_dir=$(mktemp -d)
+    BRANCH=${GIT_BRANCH:-master}
+    old_git_dir=$(mktemp -d)
+    fresh_export_dir=$(mktemp -d)
     if [ -z "$GIT_REMOTE_URL" ]; then
       echo "[E] GIT_REMOTE_URL not set"
       exit 1
     else
+      git clone --branch "$BRANCH" "$GIT_REMOTE_URL" "$old_git_dir"
       setup_git
-      bundle exec outliner-export "$tmp_dir"
-      cd "$tmp_dir"
-      git init
       update_git_config
+      echo "[+] Exporting data from Outline"
+      bundle exec outliner-export "$fresh_export_dir"
+      echo "[+] Resetting git repository"
+      cd "$old_git_dir"
+      # We update so that git forgets all files
+      git ls-files -z |xargs -n1 -0 git rm
+      # Then we copy across the files from the new export
+      cd "$fresh_export_dir"
+      echo "[+] Updating git repository"
+      rsync -av . "$old_git_dir"
+      cd "$old_git_dir"
+      echo "[+] Committing to git"
       git add .
       git commit --message "Backup: $(date)" > /dev/null
-      BRANCH=${GIT_BRANCH:-master}
-      git checkout -b "$BRANCH"
       git status
-      git push origin --force "HEAD:$BRANCH"
+      echo "[+] Pushing to git remote"
+      git push origin "HEAD:$BRANCH"
+      echo "[+] Cleaning up"
+      rm -rf "$old_git_dir"
+      rm -rf "$fresh_export_dir"
     fi
     ;;
   *)
