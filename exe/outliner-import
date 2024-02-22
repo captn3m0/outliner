@@ -28,7 +28,7 @@ def create_documents_recursively(directory, collection_id, parent_document_id = 
     }
 
     params[:parentDocumentId] = parent_document_id if parent_document_id
-    CLIENT.documents_create(params)
+    CLIENT.documents__create(params)
     puts "[-] #{file}"
   end
 
@@ -42,7 +42,7 @@ def create_documents_recursively(directory, collection_id, parent_document_id = 
       publish: true,
       parentDocumentId: parent_document_id
     }
-    response = CLIENT.documents_create(params)
+    response = CLIENT.documents__create(params)
     create_documents_recursively(dir, collection_id, response['data']['id'])
   end
   Dir.chdir cwd
@@ -65,7 +65,7 @@ begin
 rescue StandardError? => e
   # If we fail, print an error, and delete the collection
   puts "[E] Import failed with error: #{e.message}"
-  CLIENT.collections_delete(id: root_collection_id)
+  CLIENT.collections__delete(id: root_collection_id)
   puts '[E] Deleted collection, please report the issue or retry'
   exit 1
 end

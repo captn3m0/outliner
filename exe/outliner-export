@@ -20,11 +20,28 @@ local_directory = ARGV[0]
 CLIENT = Outliner::Client.new ENV['OUTLINE_BASE_URI']
 
 # Download the complete zip
-response = CLIENT.collections_exportAll(download: true)
+response = CLIENT.collections__export_all(format: "outline-markdown")
+
+raise 'Failed to trigger export_all action' if not response['success']
+
+file_operation_id = response['data']['fileOperation']['id']
+fop_info_response = nil
+i = 0
+loop do
+  i += 1
+  raise 'Timed out waiting for the file export operation to complete' if i > 20
+  sleep(2*i)
+  fop_info_response = CLIENT.fileOperations__info(id: file_operation_id)
+  raise 'Failed to query export file operation info' if not fop_info_response['ok']
+  break if fop_info_response['data']['state'] == 'complete'
+end
+
+fop_redirect_response = CLIENT.fileOperations__redirect(id: file_operation_id)
+
 
 # Extract it to a tempfle
 file = Tempfile.new('download.zip')
-File.open(file.path, 'w') { |f| f.write(response.body) }
+File.open(file.path, 'w') { |f| f.write(fop_redirect_response) }
 
 `unzip -o "#{file.path}" -d "#{local_directory}"`
 
