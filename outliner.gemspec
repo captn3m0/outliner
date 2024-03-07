@@ -23,10 +23,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "httparty", "~> 0.17"
+  spec.add_dependency "httparty", "~> 0.21"
+  spec.add_dependency "json", "~> 2.7"
 
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_dependency "rake", ">= 12.3"
-  spec.add_development_dependency "webmock", "~> 3.6"
-  spec.add_development_dependency "minitest", "~> 5.8"
+  spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_dependency "rake", ">= 13.1"
+  spec.add_development_dependency "webmock", "~> 3.23"
+  spec.add_development_dependency "minitest", "~> 5.22"
 end
