@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "data": {
+    "fileOperation": {
+      "id": "08d5db26-bf43-4ec9-ac62-8769fd828e94",
+      "type": "export",
+      "format": "outline-markdown",
+      "name": "Acme-export.zip",
+      "state": "creating",
+      "error": null,
+      "size": "0",
+      "collectionId": null,
+      "user": {
+        "id": "817fb131-4a9b-4981-9002-38c2503adc3e",
+        "name": "Acme Admin",
+        "avatarUrl": "https://fake-avatar-url.com",
+        "color": "#2BC2FF",
+        "isAdmin": true,
+        "isSuspended": false,
+        "isViewer": false,
+        "createdAt": "2024-03-07T04:03:45.204Z",
+        "updatedAt": "2024-03-07T06:51:26.023Z",
+        "lastActiveAt": "2024-03-07T06:51:26.023Z"
+      },
+      "createdAt": "2024-03-07T06:51:26.031Z",
+      "updatedAt": "2024-03-07T06:51:26.031Z"
+    }
+  },
+  "status": 200,
+  "ok": true
+}
