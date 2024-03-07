@@ -28,6 +28,13 @@ require 'outliner'
 client = Outliner.new('https://knowledge.example.com')
 pp client.auth_info
 pp client.collections_list(offset: 0, limit: 10)
+# This works around a 302 redirect bug in httparty
+begin
+  r = @client.fileOperations__redirect({id: FILE_OPERATION_ID}, format: nil, no_follow: true)
+rescue HTTParty::RedirectionTooDeep => e
+  # Download this using response = HTTParty.get e.response.header['location'] if needed
+  pp e.response.header['location']
+end
 ```
 
 ### Import
