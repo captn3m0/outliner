@@ -20,19 +20,19 @@ module Outliner
       end
     end
 
-    def method_missing(method_name, params = {})
-      method_name = '/' + method_name.to_s.sub('__', '.')
-      puts method_name
-      body = {token: @token}.merge(params).to_json
+    def method_missing(method_name, params = {}, options = {})
+      method_name = "/#{method_name.to_s.sub('__', '.')}"
+
       options = {
-        body: body,
+        body: params.to_json,
         headers: {
-          'Accept'=>'application/json',
-          'Content-Type': 'application/json',
-          'User-Agent': "Outliner/#{Outliner::VERSION}"
+          'Accept' => 'application/json',
+          'Content-Type' => 'application/json',
+          'User-Agent' => "Outliner/#{Outliner::VERSION}",
+          'Authorization' => "Bearer #{@token}"
         },
-        format: :json
-      }
+        format: :json,
+      }.merge!(options)
 
       self.class.post(method_name, options)
     end

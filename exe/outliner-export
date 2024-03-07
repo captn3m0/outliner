@@ -36,14 +36,14 @@ loop do
   break if fop_info_response['data']['state'] == 'complete'
 end
 
-fop_redirect_response = CLIENT.fileOperations__redirect(id: file_operation_id)
+begin
+  fop_redirect_response = CLIENT.fileOperations__redirect({id: file_operation_id}, {no_follow: true})
+rescue HTTParty::RedirectionTooDeep => e
+  response = HTTParty.get e.response.header['location']
+  file = Tempfile.new('download.zip')
+  File.open(file.path, 'w') { |f| f.write(response.body) }
+  `unzip -o "#{file.path}" -d "#{local_directory}"`
+  file.unlink
+end
 
 
-# Extract it to a tempfle
-file = Tempfile.new('download.zip')
-File.open(file.path, 'w') { |f| f.write(fop_redirect_response) }
-
-`unzip -o "#{file.path}" -d "#{local_directory}"`
-
-# Delete tempfile
-file.unlink
